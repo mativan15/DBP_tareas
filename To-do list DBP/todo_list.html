@@ -1,0 +1,78 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>DBP</title>
+    <link rel="stylesheet" href="todo.css">
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const errorMessage = document.createElement('div');
+        errorMessage.classList.add('error');
+        document.querySelector('body').insertBefore(errorMessage, document.querySelector('#tasks'));
+
+        document.querySelector('#new-task').onsubmit = () => {
+            const taskValue = document.querySelector('#task').value.trim();
+            if (taskValue === "") {
+                errorMessage.textContent = "Please enter a task";
+                return false;
+            }
+            errorMessage.textContent = "";
+
+            const cb = document.createElement("INPUT");
+            cb.setAttribute("type", "checkbox");
+            const li = document.createElement('li');
+            li.appendChild(cb);
+
+            const taskText = document.createTextNode(document.querySelector('#task').value);
+            li.appendChild(taskText);
+            document.querySelector('#tasks').append(li);
+            
+            const removeButton = document.createElement("button");
+            removeButton.textContent = 'x';
+            removeButton.style.marginLeft = '10px';
+            li.appendChild(removeButton);
+
+            cb.addEventListener('change', () => {
+                if (cb.checked) {
+                    li.classList.add('completed');
+                } else {
+                    li.classList.remove('completed');
+                }
+            });
+            removeButton.addEventListener('click', () => {
+                li.remove();
+            });
+            document.querySelector('#task').value = '';
+            return false;
+        };
+
+        document.querySelector('#check-all').onclick = () => {
+            document.querySelectorAll('#tasks input[type="checkbox"]').forEach(checkbox => {
+                checkbox.checked = true;
+                checkbox.parentElement.classList.add('completed');
+            });
+        };
+        document.querySelector('#uncheck-all').onclick = () => {
+            document.querySelectorAll('#tasks input[type="checkbox"]').forEach(checkbox => {
+                checkbox.checked = false;
+                checkbox.parentElement.classList.remove('completed');
+            });
+        };
+    });
+    </script>
+</head>
+<body>
+    <p>Computer Science</p>
+    <h1>Tasks</h1>
+    <form id="new-task">
+        <input id="task" autocomplete="off" autofocus placeholder="New Task" type="text">
+        <input type="submit">
+    </form>
+    <div class="button-container">
+        <button id="check-all">Check All</button> 
+        <button id="uncheck-all">Clear Selection</button> 
+    </div>
+    <ol id="tasks">
+    </ol>
+</body>
+</html>
